@@ -1,9 +1,9 @@
 "use strict";
 
-const socketIo = require("socket.io")(3050);
-const io = socketIo.of("/hub");
+const io = require("socket.io")(3050);
+const hub = io.of("/hub");
 
-io.on("connection", (socket) => {
+hub.on("connection", (socket) => {
   console.log('connected to HUB');
 
   socket.on("pickup", (order) => {
@@ -15,17 +15,18 @@ io.on("connection", (socket) => {
       payload: order,
     });
 
-    io.emit("pickup", payload);
+    hub.emit("pickup", order);
   });
 
   socket.on("inTransit", (order) => {
+    console.log('socket > ',socket);
     console.log("EVENT ", {
       event: "inTransit",
       time: new Date(),
       payload: order,
     });
 
-    io.emit("inTransit", payload);
+    hub.emit("inTransit", order);
   });
 
   socket.on("delivered", (order) => {
@@ -35,8 +36,8 @@ io.on("connection", (socket) => {
       payload: order,
     });
 
-    io.emit("delivered", payload);
+    hub.emit("delivered", order);
   });
 });
 
-module.exports = { io };
+module.exports = hub;

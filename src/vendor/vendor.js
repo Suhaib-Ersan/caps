@@ -1,7 +1,6 @@
 "use strict";
 
 const io = require("socket.io-client");
-const { PORT } = require("../../HUB.js");
 const hubConnection = io.connect(`http://localhost:3050/hub`);
 
 const faker = require("faker");
