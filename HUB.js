@@ -1,31 +1,42 @@
 "use strict";
 
-const events = require("./events.js");
+const socketIo = require("socket.io")(3050);
+const io = socketIo.of("/hub");
 
-require("./src/vendor.js");
-require("./src/driver.js");
+io.on("connection", (socket) => {
+  console.log('connected to HUB');
 
-events.on("pickup", (order) => {
-  console.log("EVENT ", {
-    event: "pickup",
-    time: new Date(),
-    payload: order,
+  socket.on("pickup", (order) => {
+    socket.join(order.store);
+
+    console.log("EVENT ", {
+      event: "pickup",
+      time: new Date(),
+      payload: order,
+    });
+
+    io.emit("pickup", payload);
+  });
+
+  socket.on("inTransit", (order) => {
+    console.log("EVENT ", {
+      event: "inTransit",
+      time: new Date(),
+      payload: order,
+    });
+
+    io.emit("inTransit", payload);
+  });
+
+  socket.on("delivered", (order) => {
+    console.log("EVENT ", {
+      event: "delivered",
+      time: new Date(),
+      payload: order,
+    });
+
+    io.emit("delivered", payload);
   });
 });
 
-events.on("inTransit", (order) => {
-  console.log("EVENT ", {
-    event: "inTransit",
-    time: new Date(),
-    payload: order,
-  });
-});
-
-events.on("delivered", (order) => {
-  console.log("EVENT ", {
-    event: "delivered",
-    time: new Date(),
-    payload: order,
-  });
-});
-
+module.exports = { io };

@@ -1,6 +1,9 @@
 "use strict";
 
-const events = require("../events.js");
+const io = require("socket.io-client");
+const { PORT } = require("../../HUB.js");
+const hubConnection = io.connect(`http://localhost:3050/hub`);
+
 const faker = require("faker");
 
 setInterval(() => {
@@ -10,9 +13,9 @@ setInterval(() => {
     customer: faker.name.findName(),
     address: `${faker.address.streetName()}, ${faker.address.cityName()}`,
   };
-  events.emit("pickup", order);
+  hubConnection.emit("pickup", order);
 }, 6000);
 
-events.on("delivered", (payload) => {
+hubConnection.on("delivered", (payload) => {
   console.log(`VENDOR: Thank you for delivering ${payload.orderID}`);
 });
