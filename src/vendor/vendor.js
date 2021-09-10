@@ -8,7 +8,7 @@ const hubConnection = io.connect(`http://localhost:3050/hub`);
 const faker = require("faker");
 
 
-vendorGetMessages();
+// vendorGetMessages();
 
 hubConnection.emit("vendorGetMessages");
 

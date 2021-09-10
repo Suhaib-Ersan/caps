@@ -7,7 +7,8 @@ const hubConnection = io.connect(`http://localhost:3050/hub`);
 
 hubConnection.emit("driverGetMessages");
 
-driverGetMessages();
+// driverGetMessages();
+
 let timing1;
 let timing2
 hubConnection.on("driverPickup", (order) => {
